@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>SPEP AI 영어 학습앱 오버뷰 · v1.2</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --blue:#5b8cff; --blue-soft:#eef3ff; --blue-line:#c4d6ff;
+  --ink:#16181d; --ink-2:#2b2e36; --gray:#6b7280; --gray-2:#9ca3af;
+  --bg:#f5f6f8; --line:#e5e7eb; --photo-bg:#edf0f2;
+  --warn:#e8613a; --warn-bg:#fff4f0; --warn-line:#f6c9b9;
+  --nav-h:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity;scroll-padding-top:var(--nav-h)}
+body{font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif;color:var(--ink);background:#fff;line-height:1.55;word-break:keep-all;-webkit-font-smoothing:antialiased}
+img{display:block}
+ul{list-style:none}
+
+/* ---------- top nav ---------- */
+.nav{position:fixed;inset:0 0 auto 0;height:var(--nav-h);z-index:50;background:rgba(255,255,255,.88);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1328px;margin:0 auto;height:100%;padding:0 24px;display:flex;align-items:center;gap:20px}
+.nav-brand{font-weight:800;font-size:20px;letter-spacing:-.02em;white-space:nowrap;color:var(--ink);text-decoration:none}
+.nav-brand b{color:var(--blue)}
+.nav-in{justify-content:space-between;gap:48px}
+.nav-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px 0;min-width:0}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tabs a{flex:none;font-size:12px;font-weight:500;color:var(--gray-2);text-decoration:none;padding:5px 10px;border-radius:999px;border:1px solid var(--line);transition:background .2s,color .2s,border-color .2s}
+.nav-tabs a:hover{background:var(--bg);color:var(--gray)}
+.nav-tabs a.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.progress{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:var(--blue);transition:width .1s linear}
+
+/* ---------- section shell ---------- */
+.sec{min-height:100vh;min-height:100svh;padding:calc(var(--nav-h) + 40px) 24px 56px;display:flex;align-items:center;scroll-snap-align:start}
+.sec:nth-of-type(even){background:#fff}
+.inner{width:100%;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.sec-head{display:flex;flex-direction:column;gap:10px}
+.sec-title{display:flex;align-items:baseline;gap:12px;font-weight:700}
+.sec-no{color:var(--blue);font-size:16px}
+.sec-title h2{font-size:34px;line-height:1.3;font-weight:700}
+.sec-desc{color:var(--gray);font-size:18px}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* ---------- cover ---------- */
+.cover{padding-top:calc(var(--nav-h) + 56px)}
+.badge{align-self:flex-start;background:var(--blue);color:#fff;font-weight:700;font-size:13px;padding:4px 10px;border-radius:4px}
+.cover h1{font-size:56px;line-height:1.3;font-weight:800;letter-spacing:-.01em}
+.cover .sub{font-size:23px;font-weight:500;color:var(--gray)}
+.cover .src{font-size:14px;color:var(--gray-2)}
+.cover-head{display:flex;flex-direction:column;gap:16px}
+.hero{position:relative;height:440px;border-radius:20px;overflow:hidden;background:var(--photo-bg)}
+.photo{position:absolute}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none}
+.photo::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2)}
+.photo.plain::after{display:none}
+.hero .photo{inset:-80.86% -17.65% -11.66% 0}
+.scroll-hint{align-self:center;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--gray-2);font-weight:600}
+.scroll-hint i{display:inline-block;width:18px;height:18px;border-right:2px solid var(--gray-2);border-bottom:2px solid var(--gray-2);transform:rotate(45deg) translate(-3px,-3px);animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:rotate(45deg) translate(1px,1px)}}
+
+/* ---------- shared atoms ---------- */
+.row{display:flex;gap:20px;align-items:stretch}
+.row.g16{gap:16px}
+.card{flex:1 1 0;min-width:0;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:12px;transition:transform .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(22,24,29,.08)}
+.card.gray{background:var(--bg)}
+.card.line{background:#fff;border:1.5px solid var(--blue)}
+.card.dark{background:var(--ink)}
+.card.dark:hover{box-shadow:0 14px 30px rgba(22,24,29,.25)}
+.card.g10{gap:10px}.card.g8{gap:8px}.card.g14{gap:14px}
+.ico{width:44px;height:44px;border-radius:12px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex:none}
+.ico img{width:22px;height:22px}
+.ico.soft{background:var(--blue-soft)}
+.ico.dark{background:rgba(255,255,255,.2)}
+.eyebrow{font-weight:800;color:var(--blue);font-size:15px;line-height:1.4}
+.eyebrow.s13{font-size:13px}.eyebrow.s16{font-size:16px;line-height:1.55}
+.eyebrow.b{font-weight:700}
+.card h3{font-size:25px;font-weight:700;line-height:1.55;color:var(--ink)}
+.card h3.s24{font-size:24px}
+.card p.txt{color:var(--gray);font-size:16px}
+.card.dark h3{color:#fff;font-size:22px}
+.card.dark .eyebrow{font-size:14px;font-weight:700}
+.card.dark p.txt{color:#bfc4cc;font-size:14px}
+.tag{align-self:flex-start;font-size:13px;font-weight:700;padding:3px 8px;border-radius:4px;background:var(--blue-soft);color:var(--blue)}
+.tag.warn{background:var(--warn-bg);color:var(--warn);font-size:14px}
+.tag.big{font-size:14px}
+.sep{height:1px;background:var(--line)}
+.dots{display:flex;flex-direction:column;gap:8px;font-size:15px}
+.dots li{display:flex;gap:8px}.dots li::before{content:"·"}
+.card.gray .dots,.dots.gray{color:var(--gray)}
+.dots.l17{font-size:17px}
+.dots.w{color:#fff;font-size:16px}
+.note{border-radius:12px;padding:22px 28px;display:flex;gap:20px;border:1px solid var(--warn-line);background:var(--warn-bg)}
+.note b{flex:none;color:var(--warn);font-weight:800;font-size:14px}
+.note p{font-weight:600;font-size:17px}
+.note.info{background:var(--blue-soft);border-color:var(--blue-line)}
+.note.info b{color:var(--blue)}
+
+/* ---------- 00 facts ---------- */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fact{background:var(--blue);color:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:6px;transition:transform .25s,box-shadow .25s,background .25s;cursor:default}
+.fact:hover{transform:translateY(-4px);background:#4a7bf0;box-shadow:0 14px 28px rgba(91,140,255,.35)}
+.fact span{font-size:15px;font-weight:600;color:rgba(255,255,255,.85)}
+.fact strong{font-size:26px;line-height:1.4;font-weight:700}
+
+/* ---------- photo cards ---------- */
+.pc{flex:1 1 0;min-width:0;background:var(--bg);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+.pc:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(22,24,29,.1)}
+.pc .ph{position:relative;overflow:hidden;background:var(--photo-bg)}
+.pc .ph .photo{transition:transform .6s ease}
+.pc:hover .ph .photo{transform:scale(1.05)}
+.pc.h220 .ph{height:220px}.pc.h170 .ph{height:170px}
+.pc .cap{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px}
+.pc .cap b{font-size:22px;font-weight:700}
+.pc .cap span{font-size:17px;color:var(--gray)}
+
+/* ---------- 03 GNB (interactive) ---------- */
+.gnb .card{cursor:pointer}
+.gnb .card.sel{background:var(--blue);border-color:var(--blue)}
+.gnb .card.sel .eyebrow,.gnb .card.sel h3,.gnb .card.sel .txt,.gnb .card.sel .dots{color:#fff}
+.gnb .card.sel .ico{background:rgba(255,255,255,.22)}
+.gnb .card.sel .sep{background:rgba(255,255,255,.35)}
+
+/* ---------- 04 flow ---------- */
+.flow{display:flex;align-items:stretch;gap:12px}
+.phase{flex:1 1 0;min-width:0;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:12px;background:var(--blue);transition:transform .25s}
+.phase:hover{transform:translateY(-4px)}
+.phase.dark{background:var(--ink)}
+.phase>b{font-size:14px;font-weight:700;color:rgba(255,255,255,.85)}
+.phase.dark>b{color:var(--blue)}
+.step{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.16);padding:10px 12px;border-radius:10px;font-weight:600;font-size:16px;color:#fff;cursor:pointer;transition:background .2s,transform .2s}
+.step:hover{transform:translateX(3px);background:rgba(255,255,255,.28)}
+.step i{flex:none;width:24px;height:24px;border-radius:50%;background:#fff;color:var(--blue);font-style:normal;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1}
+.phase.dark .step{background:var(--ink-2)}
+.phase.dark .step:hover{background:#3a3e48}
+.phase.dark .step i{background:var(--blue);color:#fff}
+.step.active{background:#fff!important;color:var(--ink)}
+.step.active i{background:var(--blue);color:#fff}
+.arrow{align-self:center;flex:none;font-weight:700;font-size:25px;color:var(--gray-2);line-height:1}
+
+/* ---------- 05 chips ---------- */
+.consist{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px}
+.consist h4{font-size:20px;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:999px;padding:10px 18px 10px 12px;font-weight:600;font-size:17px;transition:background .2s,color .2s,transform .2s;cursor:default}
+.chip img{width:20px;height:20px}
+.chip:hover{background:var(--blue-soft);transform:translateY(-2px)}
+.chip.o{background:#fff;border:1.5px solid #c7ccd6;padding:8px 16px 8px 8px;gap:10px}
+.chip.o img{width:32px;height:32px;border-radius:8px;border:1px solid var(--line)}
+.chip.o:hover{border-color:var(--blue);background:var(--blue-soft)}
+.chip.p{background:#fff;border:1px solid var(--line);padding:7px 14px;font-size:16px}
+.chips.t10{gap:10px}.chips.t8{gap:8px}
+
+/* ---------- 06 UX ---------- */
+.ux{display:flex;gap:32px;align-items:stretch}
+.ux-img{flex:1 1 0;min-width:0}
+.ux-img div{height:420px;border-radius:16px;overflow:hidden;background:var(--photo-bg)}
+.ux-img img{width:100%;height:100%;object-fit:cover}
+.ux-list{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:12px}
+.ux-item{flex:1;background:var(--blue);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:16px;transition:transform .25s,background .25s;cursor:default}
+.ux-item:hover{transform:translateX(6px);background:#4a7bf0}
+.ux-item b{width:96px;flex:none;font-size:16px;color:rgba(255,255,255,.8)}
+.ux-item span{font-weight:600;font-size:17px;color:#fff}
+
+/* ---------- 09 timeline ---------- */
+.timeline{display:flex;border-radius:14px;overflow:hidden}
+.tl{flex:1 1 0;padding:24px;display:flex;flex-direction:column;gap:6px;transition:flex-grow .4s ease}
+.tl:hover{flex-grow:1.25}
+.tl b{font-size:25px;font-weight:700}
+.tl span{font-size:16px;font-weight:600;color:var(--gray)}
+.tl.a{background:var(--bg)}.tl.b{background:#e8edfa}
+.tl.c{background:var(--blue);color:#fff}.tl.c span{color:#fff}
+
+/* ---------- 11 / 12 lists ---------- */
+.tasks,.todo{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}
+.task{background:var(--bg);border-radius:12px;padding:26px 28px;display:flex;gap:16px;align-items:center;transition:transform .25s,background .25s;cursor:default}
+.task:hover{transform:translateY(-3px);background:var(--blue-soft)}
+.task b{color:var(--blue);font-size:18px}
+.task span{font-weight:600;font-size:19px}
+.chk{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px 28px;display:flex;gap:16px;align-items:center;font-weight:500;font-size:18px;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);transition:border-color .2s,background .2s}
+.chk:hover{border-color:var(--blue)}
+.chk.hl{border-color:var(--blue-line)}
+.chk i{flex:none;width:18px;height:18px;border:1.5px solid var(--gray-2);border-radius:4px;position:relative;transition:all .2s}
+.chk.done{background:var(--blue-soft)}
+.chk.done i{background:var(--blue);border-color:var(--blue)}
+.chk.done i::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.chk.done span{color:var(--gray);text-decoration:line-through}
+.todo-count{font-size:14px;color:var(--gray);font-weight:600}
+.todo-count b{color:var(--blue)}
+
+.foot{max-width:1328px;margin:0 auto;padding:40px 24px 80px;font-size:14px;color:var(--gray-2)}
+
+/* ---------- side pager ---------- */
+.pager{position:fixed;right:20px;bottom:24px;z-index:40;display:flex;gap:8px}
+.pager button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.95);box-shadow:0 6px 18px rgba(22,24,29,.1);cursor:pointer;font-size:18px;color:var(--ink);transition:background .2s,color .2s,transform .2s}
+.pager button:hover{background:var(--blue);color:#fff;transform:translateY(-2px)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .row,.ux,.flow{flex-wrap:wrap}
+  .row .card,.row .pc{flex:1 1 calc(50% - 20px)}
+  .facts{grid-template-columns:repeat(2,1fr)}
+  .phase{flex:1 1 calc(50% - 40px)}
+  .arrow{display:none}
+  .ux-img,.ux-list{flex-basis:100%}
+  .timeline{flex-wrap:wrap}.tl{flex-basis:100%}
+  .tasks,.todo{grid-template-columns:1fr}
+  .cover h1{font-size:40px}
+}
+@media (max-width:640px){
+  .sec{padding-left:16px;padding-right:16px}
+  .row .card,.row .pc{flex-basis:100%}
+  .facts{grid-template-columns:1fr}
+  .phase{flex-basis:100%}
+  .sec-title h2{font-size:26px}
+  .cover h1{font-size:30px}.cover .sub{font-size:18px}
+  .hero{height:240px}
+  .nav-brand{display:none}
+  .pager{display:none}
+  .note{flex-direction:column;gap:6px}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="#top"><b>SPEP</b> AI 영어 학습앱</a>
+    <nav class="nav-tabs" id="tabs" aria-label="섹션 이동"></nav>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<!-- COVER -->
+<section class="sec cover" id="top" data-label="개요">
+  <div class="inner">
+    <div class="cover-head reveal">
+      <span class="badge">SERVICE OVERVIEW · SPEP AI 영어 학습앱</span>
+      <h1>SPEP AI 영어 학습앱 오버뷰</h1>
+      <p class="sub">말하기로 실력이 늘고 있다는 걸 체감하는, 매일 쓰는 구독형 영어 학습 서비스</p>
+      <p class="src">기준: SPEP AI 영어학습앱 회의록 (2026.10.20 10:30) · SPEP AI 서비스 IA 및 화면정의서 v1.2</p>
+    </div>
+    <div class="hero reveal"><div class="photo"><img src="assets/hero.png" alt=""></div></div>
+    <div class="scroll-hint"><i></i> 스크롤하거나 ↓ 키로 다음 섹션</div>
+  </div>
+</section>
+
+<!-- 00 -->
+<section class="sec" id="s00" data-label="00 한눈에">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">00</span><h2>한눈에 보는 프로젝트</h2></div>
+      <p class="sec-desc">신규 영어 학습 서비스 런칭 — 2027년 2월 출시를 목표로 앱과 웹을 함께 만듭니다.</p>
+    </div>
+    <div class="facts reveal">
+      <div class="fact"><span>출시 목표</span><strong>2027. 02</strong></div>
+      <div class="fact"><span>서비스 형태</span><strong>하이브리드 앱 + 웹</strong></div>
+      <div class="fact"><span>지원 언어</span><strong>한국어 · 영어</strong></div>
+      <div class="fact"><span>과금 방식</span><strong>구독형</strong></div>
+      <div class="fact"><span>타깃</span><strong>B2B 기업 + B2C 일반</strong></div>
+      <div class="fact"><span>주요 레벨</span><strong>초중급 ~ 중급</strong></div>
+      <div class="fact"><span>구축 규모</span><strong>약 170개 화면</strong></div>
+      <div class="fact"><span>현재 상태</span><strong>일부 기능 정의 조정 중</strong></div>
+    </div>
+    <div class="row reveal">
+      <div class="card line">
+        <div class="ico"><img src="assets/i-mic.svg" alt=""></div>
+        <div class="eyebrow">01</div>
+        <h3>말하기로 ‘늘고 있다’를<br>체감하게</h3>
+        <p class="txt">핵심 목표는 말하기 연습으로 실제 실력 향상을 느끼게 하는 것. 완료 · 달성 · 성공 순간의 피드백과 모션이 경험의 중심입니다.</p>
+      </div>
+      <div class="card line">
+        <div class="ico"><img src="assets/i-repeat.svg" alt=""></div>
+        <div class="eyebrow">02</div>
+        <h3>시험 직전이 아니라<br>매일 여는 앱</h3>
+        <p class="txt">일상 · 비즈니스 · 시험 대비 세 도메인을 다루지만, 짧게 자주 들어와 꾸준히 쓰는 지속형 학습 서비스를 지향합니다.</p>
+      </div>
+      <div class="card line">
+        <div class="ico"><img src="assets/i-building.svg" alt=""></div>
+        <div class="eyebrow">03</div>
+        <h3>기업과 개인을<br>하나의 앱에</h3>
+        <p class="txt">B2B 기업 학습자와 B2C 일반 학습자를 함께 담고, 회원 구분값에 따라 이용 가능한 콘텐츠가 달라집니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 01 -->
+<section class="sec" id="s01" data-label="01 사용자">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">01</span><h2>사용자와 회원 구조</h2></div>
+      <p class="sec-desc">누가, 어떤 목적으로 쓰는지에 따라 보이는 콘텐츠가 달라집니다.</p>
+    </div>
+    <div class="row reveal">
+      <div class="card gray g10">
+        <div class="ico"><img src="assets/i-building.svg" alt=""></div>
+        <span class="tag">B2B</span>
+        <h3>기업 학습자</h3>
+        <p class="txt">회사가 제공하는 계정으로 학습. 기업 맞춤 콘텐츠와 학습 현황 관리가 중요합니다.</p>
+      </div>
+      <div class="card gray g10">
+        <div class="ico"><img src="assets/i-user.svg" alt=""></div>
+        <span class="tag">B2C</span>
+        <h3>일반 학습자</h3>
+        <p class="txt">설문 · 추천 · 샘플 체험을 거쳐 직접 구독. 첫 경험에서 가치를 느껴야 합니다.</p>
+      </div>
+      <div class="card dark g10">
+        <div class="ico dark"><img src="assets/i-id.svg" alt=""></div>
+        <div class="eyebrow">회원 구분값</div>
+        <h3>학습 유형에 따라 회원을 구분하고,<br>구분값별로 이용 가능한<br>콘텐츠를 다르게 제공</h3>
+        <p class="txt">※ 유형별 상세 권한 · B2B/B2C 화면 차이는 추후 확인</p>
+      </div>
+    </div>
+    <div class="row reveal">
+      <div class="pc h220"><div class="ph"><div class="photo" style="inset:-124.65% -64% -24.65% -36%"><img src="assets/d-daily.png" alt=""></div></div><div class="cap"><b>일상 영어</b><span>여행 · 일상 대화처럼 생활 속에서 바로 쓰는 표현</span></div></div>
+      <div class="pc h220"><div class="ph"><div class="photo" style="inset:-137.11% -60% -12.18% -40%"><img src="assets/d-business.png" alt=""></div></div><div class="cap"><b>비즈니스 영어</b><span>회의 · 메일 · 발표 등 업무 커뮤니케이션</span></div></div>
+      <div class="pc h220"><div class="ph"><div class="photo" style="inset:-72.77% -45.45% -18.73% -36.36%"><img src="assets/d-test.png" alt=""></div></div><div class="cap"><b>시험 대비 영어</b><span>핵심 내용을 요약형으로 빠르게 정리</span></div></div>
+    </div>
+    <div class="note reveal"><b>INSIGHT</b><p>특정 시험 직전에 몰아 쓰는 앱이 아니라, 일상적으로 꾸준히 여는 학습 서비스. 세 도메인 모두 ‘오늘 10분’ 단위로 이어지게 설계합니다.</p></div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="sec" id="s02" data-label="02 콘텐츠">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">02</span><h2>주요 학습 콘텐츠</h2></div>
+      <p class="sec-desc">다섯 가지 콘텐츠를 어떤 상황에서 어떤 방식으로 제공할지가 핵심입니다.</p>
+    </div>
+    <div class="row g16 reveal">
+      <div class="pc h170"><div class="ph"><div class="photo" style="inset:-59.85% -44% 0 -56%"><img src="assets/c-conversation.png" alt=""></div></div><div class="cap"><b>일상 회화</b><span>자주 쓰는 상황별 대화</span></div></div>
+      <div class="pc h170"><div class="ph"><div class="photo" style="inset:-45.05% -36.36% -0.27% -45.45%"><img src="assets/c-business.png" alt=""></div></div><div class="cap"><b>비즈니스 커뮤니케이션</b><span>회의 · 협상 · 이메일 표현</span></div></div>
+      <div class="pc h170"><div class="ph"><div class="photo" style="inset:-77.62% -55.56% 0 -66.67%"><img src="assets/c-listening.png" alt=""></div></div><div class="cap"><b>리스닝</b><span>듣고 따라 말하는 반복 학습</span></div></div>
+      <div class="pc h170"><div class="ph"><div class="photo" style="inset:-3.17% -12.5% -2.65% -12.5%"><img src="assets/c-vocab.png" alt=""></div></div><div class="cap"><b>어휘 학습</b><span>단어 · 문장 카드와 복습</span></div></div>
+      <div class="pc h170"><div class="ph"><div class="photo" style="inset:-57.65% -16.67% 0 -50%"><img src="assets/c-ai.png" alt=""></div></div><div class="cap"><b>AI 말하기 · 대화</b><span>역할과 주제를 정해 실제처럼</span></div></div>
+    </div>
+    <div class="note reveal"><b>INSIGHT</b><p>콘텐츠 레벨과 ‘어떤 상황에서 어떤 방식으로’ 제공할지에 따라 전체 레벨 구조가 일부 조정됐습니다. 초중급 사용자도 다음 단계가 분명히 보여야 합니다.</p></div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="sec" id="s03" data-label="03 GNB">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">03</span><h2>GNB 구조</h2></div>
+      <p class="sec-desc">메인 탭은 Learn · Chat · Review · My 네 개로 구성합니다. <span style="color:var(--gray-2);font-size:15px">(카드를 눌러 강조)</span></p>
+    </div>
+    <div class="row gnb reveal" id="gnb">
+      <div class="card line" tabindex="0">
+        <div class="ico"><img src="assets/i-book.svg" alt=""></div>
+        <div class="eyebrow">LEARN</div><h3>정규 학습</h3><p class="txt">정규 학습 콘텐츠를 이용하는 영역</p><div class="sep"></div>
+        <ul class="dots"><li>코스 · 레벨별 레슨</li><li>학습 모듈 진행</li></ul>
+      </div>
+      <div class="card line" tabindex="0">
+        <div class="ico"><img src="assets/i-msg.svg" alt=""></div>
+        <div class="eyebrow">CHAT</div><h3>AI 말하기</h3><p class="txt">AI와 영어로 말하는 영역</p><div class="sep"></div>
+        <ul class="dots"><li>자유 대화 — 역할 · 주제를 직접 설정</li><li>시나리오 기반 대화</li></ul>
+      </div>
+      <div class="card line" tabindex="0">
+        <div class="ico"><img src="assets/i-rotate.svg" alt=""></div>
+        <div class="eyebrow">REVIEW</div><h3>복습</h3><p class="txt">학습한 단어를 보관하고 다시 학습</p><div class="sep"></div>
+        <ul class="dots"><li>단어 보관함</li><li>SRS 간격 반복 복습</li></ul>
+      </div>
+      <div class="card line" tabindex="0">
+        <div class="ico"><img src="assets/i-user.svg" alt=""></div>
+        <div class="eyebrow">MY</div><h3>마이페이지</h3><p class="txt">계정과 학습 상태를 관리</p><div class="sep"></div>
+        <ul class="dots"><li>계정 · 구독 관리</li><li>학습 현황 · 챌린지</li></ul>
+      </div>
+    </div>
+    <div class="note reveal"><b>NOTE</b><p>게이미피케이션은 과하게 넣지 않고 My의 ‘챌린지’ 중심으로 제한적으로 적용합니다.</p></div>
+    <div class="note info reveal"><b>IA 확인</b><p>회의록은 Review(단어 보관 + SRS 복습)인데, IA v1.2(10.28)는 REVIEW → BOOKMARK(보관함 단독, 복습 탭 삭제)로 바뀌었습니다. SRS 복습이 어디에 들어갈지 확인이 필요합니다.</p></div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="sec" id="s04" data-label="04 플로우">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">04</span><h2>사용자 주요 학습 플로우</h2></div>
+      <p class="sec-desc">설문으로 목적을 파악해 코스를 추천하고, 체험을 거쳐 구독과 매일의 학습으로 잇습니다.</p>
+    </div>
+    <div class="flow reveal" id="flow">
+      <div class="phase"><b>진입</b>
+        <div class="step"><i>1</i>설문</div><div class="step"><i>2</i>코스 추천</div></div>
+      <span class="arrow">→</span>
+      <div class="phase"><b>전환</b>
+        <div class="step"><i>3</i>회원가입 유도</div><div class="step"><i>4</i>샘플 체험</div><div class="step"><i>5</i>구독</div></div>
+      <span class="arrow">→</span>
+      <div class="phase dark"><b>학습</b>
+        <div class="step"><i>6</i>정규 학습</div><div class="step"><i>7</i>AI 대화</div><div class="step"><i>8</i>복습</div></div>
+      <span class="arrow">→</span>
+      <div class="phase"><b>결과</b>
+        <div class="step"><i>9</i>학습 결과 · 피드백</div><div class="step"><i>10</i>결과 요약 페이지</div></div>
+    </div>
+    <div class="note reveal"><b>INSIGHT</b><p>B2C는 ‘설문 → 추천 → 체험’ 세 단계에서 가치를 느껴야 구독으로 이어집니다.<br>학습은 정규 학습 · AI 대화 · 복습이 한 흐름으로 이어지고, 끝에는 항상 결과 요약으로 마무리합니다.</p></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="sec" id="s05" data-label="05 모듈">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">05</span><h2>학습 모듈 구성</h2></div>
+      <p class="sec-desc">모듈마다 성격은 달라도 인터랙션과 피드백 방식은 최대한 같게 맞춥니다.</p>
+    </div>
+    <div class="row reveal">
+      <div class="card gray">
+        <div class="ico"><img src="assets/i-file.svg" alt=""></div>
+        <div class="eyebrow s13">SUMMARY</div><h3 class="s24">요약형</h3>
+        <ul class="dots"><li>시험 대비 · 핵심 내용을 요약해 제공</li><li>짧은 시간에 핵심만 확인</li></ul>
+      </div>
+      <div class="card gray">
+        <div class="ico"><img src="assets/i-mic.svg" alt=""></div>
+        <div class="eyebrow s13">SPEAKING</div><h3 class="s24">단어 Speaking</h3>
+        <ul class="dots"><li>카드 형태로 단어 · 문장 제시</li><li>듣고 따라 말하며 연습</li></ul>
+      </div>
+      <div class="card gray">
+        <div class="ico"><img src="assets/i-msgs.svg" alt=""></div>
+        <div class="eyebrow s13">GUIDED CHAT</div><h3 class="s24">Guided Chat</h3>
+        <ul class="dots"><li>AI와 대화하며 학습</li><li>Sample Answer 제공</li><li>일부 문장은 빈칸 채우기로 진행</li></ul>
+      </div>
+      <div class="card gray">
+        <div class="ico"><img src="assets/i-spark.svg" alt=""></div>
+        <div class="eyebrow s13">FREE CHAT</div><h3 class="s24">Free Chat</h3>
+        <ul class="dots"><li>자유로운 AI 대화</li><li>대화 역할과 주제를 사용자가 설정</li></ul>
+      </div>
+    </div>
+    <div class="consist reveal">
+      <h4>모든 모듈이 공유하는 공통 패턴</h4>
+      <div class="chips">
+        <div class="chip"><img src="assets/k-1.svg" alt="">문제 제시</div>
+        <div class="chip"><img src="assets/k-2.svg" alt="">듣기 · 말하기 입력</div>
+        <div class="chip"><img src="assets/k-3.svg" alt="">즉시 피드백</div>
+        <div class="chip"><img src="assets/k-4.svg" alt="">힌트 · 모범 답안</div>
+        <div class="chip"><img src="assets/k-5.svg" alt="">완료 · 성취 연출</div>
+        <div class="chip"><img src="assets/k-6.svg" alt="">결과 요약</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="sec" id="s06" data-label="06 UX 방향">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">06</span><h2>학습 UX 방향</h2></div>
+      <p class="sec-desc">사용자가 말하기 연습을 통해 실제로 영어가 늘고 있다고 느끼게 만드는 것이 목표입니다.</p>
+    </div>
+    <div class="ux reveal">
+      <div class="ux-img"><div><img src="assets/ux-motivation.jpg" alt=""></div></div>
+      <div class="ux-list">
+        <div class="ux-item"><b>동기부여</b><span>학습을 계속하게 만드는 UX</span></div>
+        <div class="ux-item"><b>즉각 피드백</b><span>성공 · 완료 순간을 바로 알려줌</span></div>
+        <div class="ux-item"><b>결과 요약</b><span>레슨이 끝나면 결과와 요약 제공</span></div>
+        <div class="ux-item"><b>성장 체감</b><span>실력이 늘고 있다는 느낌을 주는 표현</span></div>
+        <div class="ux-item"><b>일관성</b><span>모듈이 달라도 같은 인터랙션</span></div>
+        <div class="ux-item"><b>쉬운 UX</b><span>초중급자도 헤매지 않는 단순함</span></div>
+      </div>
+    </div>
+    <div class="note reveal"><b>KEY POINT</b><p>완료 · 달성 · 성공 시점의 인터랙션과 모션 완성도를 특히 중요하게 봅니다. 디자인 시스템 단계에서 성취 연출 패턴을 먼저 정의합니다.</p></div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section class="sec" id="s07" data-label="07 레퍼런스">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">07</span><h2>레퍼런스</h2></div>
+      <p class="sec-desc">단순하고 친화적인 학습 흐름은 인터랙션 레퍼런스에서, AI 대화 방식은 콘텐츠 레퍼런스에서 참고합니다.</p>
+    </div>
+    <div class="row reveal">
+      <div class="card line">
+        <div class="ico"><img src="assets/i-pointer.svg" alt=""></div>
+        <div class="eyebrow s13">INTERACTION · USABILITY</div><h3>인터랙션 / 사용성</h3>
+        <p class="txt">모듈 인터랙션, 피드백, 학습 흐름이 단순하고 친화적인 점</p>
+        <div class="chips t10">
+          <div class="chip o"><img src="assets/l-speak.png" alt="">Speak</div>
+          <div class="chip o"><img src="assets/l-duolingo.png" alt="">Duolingo</div>
+          <div class="chip o"><img src="assets/l-malhaeboka.png" alt="">말해보카</div>
+          <div class="chip o"><img src="assets/l-cake.png" alt="">Cake</div>
+        </div>
+      </div>
+      <div class="card line">
+        <div class="ico"><img src="assets/i-book2.svg" alt=""></div>
+        <div class="eyebrow s13">CONTENTS · LEARNING</div><h3>콘텐츠 / 학습 방식</h3>
+        <p class="txt">콘텐츠 구성과 AI 대화 방식</p>
+        <div class="chips t10">
+          <div class="chip o"><img src="assets/l-ringle.png" alt="">Ringle</div>
+          <div class="chip o"><img src="assets/l-praktika.png" alt="">Praktika</div>
+          <div class="chip o"><img src="assets/l-preply.png" alt="">Preply</div>
+          <div class="chip o"><img src="assets/l-mallangtalk.png" alt="">말랑톡</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 -->
+<section class="sec" id="s08" data-label="08 구축 범위">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">08</span><h2>웹 및 기타 구축 범위</h2></div>
+      <p class="sec-desc">앱 외에 별도 웹사이트와 운영 화면, 결제까지 범위에 포함됩니다.</p>
+    </div>
+    <div class="row reveal">
+      <div class="card gray g14">
+        <div class="ico soft"><img src="assets/i-globe.svg" alt=""></div>
+        <h3 style="font-size:23px">웹 페이지</h3>
+        <div class="chips t8">
+          <div class="chip p">랜딩 페이지</div><div class="chip p">공지사항</div><div class="chip p">약관</div><div class="chip p">기타 운영성 웹페이지</div><div class="chip p">결제 관련 화면</div>
+        </div>
+      </div>
+      <div class="card dark">
+        <div class="ico dark"><img src="assets/i-code.svg" alt=""></div>
+        <div class="eyebrow">구축 방식</div>
+        <ul class="dots w"><li>일부 화면은 WebView로 제공 — 마크업까지 진행</li><li>결제 모듈 연동까지 프로젝트 범위에 포함</li><li>웹 / WebView 구분 기준은 추후 확인</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 -->
+<section class="sec" id="s09" data-label="09 일정">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">09</span><h2>일정과 디자인 우선순위</h2></div>
+      <p class="sec-desc">개발과 디자인 일정이 겹치기 때문에 화면을 한 번에 넘기지 않고 순서대로 전달합니다.</p>
+    </div>
+    <div class="timeline reveal">
+      <div class="tl a"><b>10월 말</b><span>디자인 착수</span></div>
+      <div class="tl b"><b>11월 ~</b><span>퍼블리싱 · 개발과 디자인 병행</span></div>
+      <div class="tl c"><b>2027. 02</b><span>서비스 출시</span></div>
+    </div>
+    <div class="row g16 reveal">
+      <div class="card gray g10">
+        <div class="ico"><img src="assets/i-grid.svg" alt=""></div>
+        <div class="eyebrow s16">1순위</div><h3 class="s24">공통 레이어 ·<br>디자인 시스템</h3>
+        <ul class="dots gray l17"><li>컴포넌트 · 토큰</li><li>공통 레이어 · 모달</li></ul>
+      </div>
+      <div class="card gray g10">
+        <div class="ico"><img src="assets/i-mic.svg" alt=""></div>
+        <div class="eyebrow s16">2순위</div><h3 class="s24">학습 모듈</h3>
+        <ul class="dots gray l17"><li>Speaking</li><li>Guided Chat · Free Chat</li><li>Vocabulary · Summary</li><li>기타 주요 모듈</li></ul>
+      </div>
+      <div class="card gray g10">
+        <div class="ico"><img src="assets/i-route.svg" alt=""></div>
+        <div class="eyebrow s16">3순위</div><h3 class="s24">주요 사용자 경로</h3>
+        <ul class="dots gray l17"><li>메인 · 온보딩 · 추천</li><li>구독</li><li>Learn · Chat · Review</li></ul>
+      </div>
+      <div class="card gray g10">
+        <div class="ico"><img src="assets/i-gear.svg" alt=""></div>
+        <div class="eyebrow s16">4순위</div><h3 class="s24">부가 영역</h3>
+        <ul class="dots gray l17"><li>My · 계정 · 구독 관리</li><li>학습 현황 · 챌린지</li><li>설정 · 운영 화면</li></ul>
+      </div>
+    </div>
+    <div class="note reveal"><b>INSIGHT</b><p>디자인 시스템이 먼저 확정돼야 학습 모듈과 주요 경로를 개발과 병렬로 순차 전달할 수 있습니다. 1순위 산출물이 이후 모든 화면의 속도를 결정합니다.</p></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="sec" id="s10" data-label="10 브랜딩">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">10</span><h2>브랜딩 · UI 방향</h2></div>
+      <p class="sec-desc">기존 서비스를 넓히는 것이 아니라, 새 서비스를 런칭하는 관점으로 접근합니다.</p>
+    </div>
+    <div class="row g16 reveal">
+      <div class="card line g8">
+        <div class="ico"><img src="assets/i-rocket.svg" alt=""></div>
+        <div class="eyebrow s16 b">관점</div><h3 class="s24">신규 서비스 런칭</h3><span class="tag big">확정</span>
+      </div>
+      <div class="card line g8">
+        <div class="ico"><img src="assets/i-tag.svg" alt=""></div>
+        <div class="eyebrow s16 b">네이밍</div><h3 class="s24">학습 경험과 연결되는 이름</h3><span class="tag warn">금주 결정 예정</span>
+      </div>
+      <div class="card line g8">
+        <div class="ico"><img src="assets/i-drop.svg" alt=""></div>
+        <div class="eyebrow s16 b">컬러</div><h3 class="s24">SPEP 블루가 빠질<br>가능성은 낮음</h3><span class="tag warn">미확정</span>
+      </div>
+      <div class="card line g8">
+        <div class="ico"><img src="assets/i-img.svg" alt=""></div>
+        <div class="eyebrow s16 b">비주얼</div><h3 class="s24">브랜드 컬러 ·<br>상세 비주얼 방향</h3><span class="tag warn">추후 결정</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="sec" id="s11" data-label="11 UX 과제">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">11</span><h2>주요 UX 과제</h2></div>
+      <p class="sec-desc">이번 프로젝트에서 가장 중요하게 다룰 열 가지 과제입니다.</p>
+    </div>
+    <div class="tasks reveal">
+      <div class="task"><b>01</b><span>말하기 중심 학습 경험 강화</span></div>
+      <div class="task"><b>02</b><span>학습 지속성을 높이는 동기부여 설계</span></div>
+      <div class="task"><b>03</b><span>B2B / B2C 사용자 경험 동시 고려</span></div>
+      <div class="task"><b>04</b><span>회원 유형별 콘텐츠 접근 구조 정리</span></div>
+      <div class="task"><b>05</b><span>학습 모듈 간 인터랙션 일관성</span></div>
+      <div class="task"><b>06</b><span>SRS 기반 복습 경험 설계</span></div>
+      <div class="task"><b>07</b><span>AI 대화의 역할 · 주제 · 시나리오 구조</span></div>
+      <div class="task"><b>08</b><span>학습 완료와 성취감 연출</span></div>
+      <div class="task"><b>09</b><span>학습 결과와 성장 체감 표현</span></div>
+      <div class="task"><b>10</b><span>대규모 화면을 확장하는 디자인 시스템</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="sec" id="s12" data-label="12 확인 필요">
+  <div class="inner">
+    <div class="sec-head reveal">
+      <div class="sec-title"><span class="sec-no">12</span><h2>추후 확인 필요</h2></div>
+      <p class="sec-desc">정책과 상세 IA가 정해지는 대로 화면에 반영합니다. <span class="todo-count" id="todoCount"></span></p>
+    </div>
+    <div class="todo reveal" id="todo">
+      <button class="chk"><i></i><span>회원 유형별 상세 권한</span></button>
+      <button class="chk"><i></i><span>B2B와 B2C 간 화면 · 기능 차이</span></button>
+      <button class="chk"><i></i><span>학습 콘텐츠 상세 IA</span></button>
+      <button class="chk"><i></i><span>전체 학습 모듈 목록</span></button>
+      <button class="chk"><i></i><span>모듈별 상태 및 예외 케이스</span></button>
+      <button class="chk"><i></i><span>구독 상품 및 결제 정책</span></button>
+      <button class="chk"><i></i><span>SRS 상세 로직</span></button>
+      <button class="chk"><i></i><span>AI Speaking 평가 항목</span></button>
+      <button class="chk"><i></i><span>학습 결과 페이지 제공 지표</span></button>
+      <button class="chk"><i></i><span>챌린지 상세 정책</span></button>
+      <button class="chk"><i></i><span>웹 / WebView 구분 기준</span></button>
+      <button class="chk"><i></i><span>관리자 · 운영 기능 포함 범위</span></button>
+      <button class="chk"><i></i><span>네이밍 및 브랜드 컬러 최종 확정</span></button>
+      <button class="chk hl"><i></i><span>Review ↔ BOOKMARK(IA v1.2) 명칭 · SRS 위치</span></button>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  Sources — SPEP AI 영어학습앱 회의록 (2026.10.20 10:30) · SPEP AI 서비스 IA 및 화면정의서 v1.2 (2026.10.28) · 이미지: Unsplash (무료 라이선스) · 이전 버전 v1.1 (10.19, 분석 인사이트)은 ‘[v1.1 · 10.19] SPEP 서비스 오버뷰’ 페이지에 보존
+</footer>
+
+<div class="pager" aria-label="섹션 이동">
+  <button id="prev" aria-label="이전 섹션">↑</button>
+  <button id="next" aria-label="다음 섹션">↓</button>
+</div>
+
+<script>
+(function(){
+  var secs=[].slice.call(document.querySelectorAll('.sec'));
+  var tabs=document.getElementById('tabs');
+  secs.forEach(function(s,i){
+    var a=document.createElement('a');
+    a.href='#'+s.id; a.textContent=s.dataset.label; a.dataset.i=i;
+    tabs.appendChild(a);
+  });
+  var links=[].slice.call(tabs.children);
+
+  /* reveal on scroll */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  [].forEach.call(document.querySelectorAll('.reveal'),function(el,i){
+    el.style.transitionDelay=(i%4)*60+'ms'; io.observe(el);
+  });
+
+  /* nav spy + progress */
+  var cur=0;
+  function spy(){
+    var y=window.scrollY+window.innerHeight*0.35, idx=0;
+    secs.forEach(function(s,i){ if(s.offsetTop<=y) idx=i; });
+    if(idx!==cur||!links[idx].classList.contains('on')){
+      cur=idx;
+      links.forEach(function(l,i){ l.classList.toggle('on',i===idx); });
+      var on=links[idx]; tabs.scrollTo({left:on.offsetLeft-tabs.clientWidth/2+on.clientWidth/2,behavior:'smooth'});
+    }
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    document.getElementById('progress').style.width=(h>0?window.scrollY/h*100:0)+'%';
+  }
+  window.addEventListener('scroll',spy,{passive:true}); window.addEventListener('resize',spy); spy();
+
+  /* prev / next + keyboard */
+  function go(d){
+    var n=Math.max(0,Math.min(secs.length-1,cur+d));
+    secs[n].scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  document.getElementById('prev').onclick=function(){go(-1)};
+  document.getElementById('next').onclick=function(){go(1)};
+  document.addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey||/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+    if(e.key==='ArrowDown'&&e.shiftKey||e.key==='j'){e.preventDefault();go(1)}
+    if(e.key==='ArrowUp'&&e.shiftKey||e.key==='k'){e.preventDefault();go(-1)}
+  });
+
+  /* 03 GNB: click to highlight */
+  var gnb=[].slice.call(document.querySelectorAll('#gnb .card'));
+  gnb.forEach(function(c){
+    function t(){ var was=c.classList.contains('sel'); gnb.forEach(function(x){x.classList.remove('sel')}); if(!was) c.classList.add('sel'); }
+    c.addEventListener('click',t);
+    c.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();t()} });
+  });
+
+  /* 04 flow: click a step to follow the journey up to it */
+  var steps=[].slice.call(document.querySelectorAll('#flow .step'));
+  steps.forEach(function(s){
+    s.addEventListener('click',function(){
+      var was=s.classList.contains('active');
+      steps.forEach(function(x){x.classList.remove('active')});
+      if(!was) s.classList.add('active');
+    });
+  });
+
+  /* 12 checklist */
+  var todo=[].slice.call(document.querySelectorAll('#todo .chk')), cnt=document.getElementById('todoCount');
+  function upd(){ var d=todo.filter(function(t){return t.classList.contains('done')}).length; cnt.innerHTML='· 확인 완료 <b>'+d+'</b> / '+todo.length; }
+  todo.forEach(function(t){ t.addEventListener('click',function(){ t.classList.toggle('done'); upd(); }); });
+  upd();
+})();
+</script>
+</body>
+</html>
